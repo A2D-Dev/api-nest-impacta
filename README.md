@@ -1,18 +1,25 @@
-# 🧠 API NestJS + Prisma - Impacta
+<p align="center">
+  <img src="./banner.png" alt="Banner - API NestJS + Prisma + MySQL - Impacta" width="100%">
+</p>
 
-API desenvolvida com **NestJS**, **Prisma ORM** e **PostgreSQL**, seguindo boas práticas de arquitetura e organização de código.
+# 🧠 API NestJS + Prisma + MySQL - Impacta
 
-## 🚀 Tecnologias
-- [NestJS](https://nestjs.com/)
-- [Prisma](https://www.prisma.io/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [ESLint](https://eslint.org/)
-- [Prettier](https://prettier.io/)
-- [PostgreSQL](https://www.postgresql.org/)
+API desenvolvida com **NestJS**, **Prisma ORM** e **MySQL**, seguindo boas práticas de arquitetura e documentação.
+Projeto acadêmico da Impacta — autoria **A2D-Dev** (Anderson Dantas).
 
-## 📂 Estrutura de pastas
+## 🚀 Tecnologias e Ferramentas
+
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
+![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
+
+## 📂 Estrutura de Pastas (sugerida)
+
 ```
-📦 API
+📦 api-nest-impacta
  ┣ 📂 src
  ┃ ┣ 📂 user
  ┃ ┣ 📂 prisma
@@ -27,11 +34,31 @@ API desenvolvida com **NestJS**, **Prisma ORM** e **PostgreSQL**, seguindo boas 
  ┗ tsconfig.json
 ```
 
-## ⚙️ Como rodar o projeto
+## 📦 Instalação
+
 ```bash
+git clone https://github.com/A2D-Dev/api-nest-impacta.git
+cd api-nest-impacta
 npm install
-npx prisma migrate dev
-npm run start:dev
+```
+
+## ⚙️ Executando
+
+```bash
+# Desenvolvimento (hot-reload)
+npm run dev
+```
+
+Aplicação em: `http://localhost:3000`
+
+## 🌱 Variáveis de ambiente
+
+Crie um `.env` baseado no `.env.example`:
+
+```env
+DATABASE_URL="mysql://root:123456@localhost:3306/api_impacta"
+PORT=3000
+JWT_SECRET="minha_chave_secreta_super_segura"
 ```
 
 ## 🧪 Testes
@@ -39,9 +66,9 @@ npm run start:dev
 npm run test
 ```
 
-## 👨‍💻 Autor
-**Anderson Dantas (A2D-Dev)**  
-💼 [GitHub](https://github.com/A2D-Dev) | 💬 [LinkedIn](https://www.linkedin.com/in/a2d-dev/)
+## 🧾 Licença
+Projeto sob [MIT](./LICENSE).
 
----
-⭐ *Se este projeto te ajudou, não esqueça de deixar uma estrela!*
+## 👨‍💻 Autor
+**A2D-Dev (Anderson Dantas)**  
+GitHub: https://github.com/A2D-Dev
