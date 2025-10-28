@@ -1,21 +1,50 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
+import { AuthRegisterDTO } from "./dto/auth-register-dto";
+import { UserService } from "src/user/user.service";
+import { access } from "fs";
 
 @Injectable()
 export class AuthService {
 
+    private issuer = 'login';
+    private audience = 'users'
+
     constructor(
         private readonly jwtService: JwtService,
-        private readonly prisma: PrismaService
+        private readonly prisma: PrismaService,
+        private readonly userService: UserService
     ) {}
 
-    async createToken() {
-        //return this.jwtService.sign();
+    
+    async createToken(user: User) {
+        return {
+            accessToken: await this.jwtService.signAsync({
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }, {
+                expiresIn: "7d",
+                subject: String(user.id),
+                issuer: this.issuer,
+                audience: this.audience
+            })
+        }
     }
 
     async checkToken(token: string) {
-        //return this.jwtService.verify();
+        try {
+            const data =  this.jwtService.verify(token,{
+                audience: this.audience,
+                issuer: this.issuer,
+            });
+
+            return data;
+        } catch (e) {
+            throw new BadRequestException (e);
+        }
     }
 
     async login(email:string, password:string) {
@@ -33,7 +62,7 @@ export class AuthService {
             throw new UnauthorizedException('Email e/ou senha incorretos.');
         }
 
-        return user;
+        return this.createToken(user);
 
     }
     
@@ -63,7 +92,7 @@ export class AuthService {
 
         const id = 0;
 
-        await this.prisma.user.update({
+        const user = await this.prisma.user.update({
             where: {
                 id,
             },
@@ -72,7 +101,15 @@ export class AuthService {
             },
         });
 
-        return true;
+        return this.createToken(user);
+
+    }
+
+    async register(data: AuthRegisterDTO) {
+    
+        const user = await this.userService.create(data);
+
+        return this.createToken(user);
 
     }
     
