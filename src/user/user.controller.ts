@@ -5,6 +5,8 @@ import { UpdatePatchUserDTO } from "./dto/update-patch-user.dto";
 import { UserService } from "./user.service";
 import { LogInterceptor } from "src/interceptors/log.interceptor";
 import { ParamId } from "src/decorators/param-id.decorator";
+import { Role } from "src/enums/role.enums";
+import { Roles } from "src/decorators/roles.decorator";
 
 @UseInterceptors(LogInterceptor) // para controlar todas as rotas da classe UserController @Post, @Get, @Put, @Patch, @Delete 
 @Controller('users')
@@ -12,35 +14,41 @@ export class UserController {
 
     constructor(private readonly userSevice: UserService){}
 
-        //@UseInterceptors(LogInterceptor) quando está dentro do construtor fica individual para cada rota.
-        @Post()
+    //@UseInterceptors(LogInterceptor) quando está dentro do construtor fica individual para cada rota.
+    @Roles(Role.Admin)
+    @Post()
     async create(@Body() data: CreateUserDTO){
         return this.userSevice.create(data);        
     }
 
+    @Roles(Role.Admin)
     @Get()
     async list() {
         return this.userSevice.list();
     }
 
+    @Roles(Role.Admin)
     @Get(':id')
     async show(@ParamId() id: number) {
         console.log({id});
         return this.userSevice.show(id);
     }
 
+    @Roles(Role.Admin)
     @Put(':id')
     async update(@Body() data: UpdatePutUserDTO, @ParamId() id: number) {
         return this.userSevice.update(id, data);
 
     }
 
+    @Roles(Role.Admin)
     @Patch(':id')
     async updatePartial(@Body() data: UpdatePatchUserDTO, @ParamId() id: number) {
         return this.userSevice.updatePartial(id, data);
 
     }
 
+    @Roles(Role.Admin)
     @Delete(':id')
     async delete(@ParamId() id: number) {
         return this.userSevice.delete(id);

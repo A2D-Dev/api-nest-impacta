@@ -4,7 +4,6 @@ import { User } from "@prisma/client";
 import { PrismaService } from "src/prisma/prisma.service";
 import { AuthRegisterDTO } from "./dto/auth-register-dto";
 import { UserService } from "src/user/user.service";
-import { access } from "fs";
 
 @Injectable()
 export class AuthService {
@@ -19,9 +18,9 @@ export class AuthService {
     ) {}
 
     
-    async createToken(user: User) {
+    createToken(user: User) {
         return {
-            accessToken: await this.jwtService.signAsync({
+            accessToken: this.jwtService.signAsync({
                 id: user.id,
                 name: user.name,
                 email: user.email
@@ -34,7 +33,7 @@ export class AuthService {
         }
     }
 
-    async checkToken(token: string) {
+    checkToken(token: string) {
         try {
             const data =  this.jwtService.verify(token,{
                 audience: this.audience,
@@ -46,6 +45,16 @@ export class AuthService {
             throw new BadRequestException (e);
         }
     }
+
+    isValidToken(token: string) {
+        try {
+            this.checkToken(token);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
 
     async login(email:string, password:string) {
 
