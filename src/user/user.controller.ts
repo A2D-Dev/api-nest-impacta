@@ -24,7 +24,7 @@ export class UserController {
         return this.userSevice.create(data);        
     }
 
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.User)
     @Get()
     async list() {
         return this.userSevice.list();
