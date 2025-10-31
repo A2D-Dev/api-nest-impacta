@@ -10,6 +10,7 @@ import { Roles } from "src/decorators/roles.decorator";
 import { RoleGuard } from "src/guards/role.guard";
 import { AuthGuard } from "src/guards/auth.guard";
 
+@Roles(Role.Admin)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor) // para controlar todas as rotas da classe UserController @Post, @Get, @Put, @Patch, @Delete 
 @Controller('users')
@@ -18,13 +19,13 @@ export class UserController {
     constructor(private readonly userSevice: UserService){}
 
     //@UseInterceptors(LogInterceptor) quando está dentro do construtor fica individual para cada rota.
-    @Roles(Role.Admin)
+    
     @Post()
     async create(@Body() data: CreateUserDTO){
         return this.userSevice.create(data);        
     }
 
-    @Roles(Role.Admin, Role.User)
+    @Roles(Role.User)
     @Get()
     async list() {
         return this.userSevice.list();
@@ -37,21 +38,21 @@ export class UserController {
         return this.userSevice.show(id);
     }
 
-    @Roles(Role.Admin)
+    
     @Put(':id')
     async update(@Body() data: UpdatePutUserDTO, @ParamId() id: number) {
         return this.userSevice.update(id, data);
 
     }
 
-    @Roles(Role.Admin)
+    
     @Patch(':id')
     async updatePartial(@Body() data: UpdatePatchUserDTO, @ParamId() id: number) {
         return this.userSevice.updatePartial(id, data);
 
     }
 
-    @Roles(Role.Admin)
+    
     @Delete(':id')
     async delete(@ParamId() id: number) {
         return this.userSevice.delete(id);
