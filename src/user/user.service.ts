@@ -3,6 +3,7 @@ import { CreateUserDTO } from "./dto/create-user.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UpdatePutUserDTO } from "./dto/update-put-user.dto";
 import { UpdatePatchUserDTO } from "./dto/update-patch-user.dto";
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -11,11 +12,14 @@ export class UserService {
 
     async create({email, name, password, birthAt}: CreateUserDTO) {
 
+        // 🧩 Gerar hash seguro da senha
+        const hashedPassword = await bcrypt.hash(password, 10);
+
        return this.prisma.user.create({
             data: {
                 email,
                 name,
-                password,
+                password:hashedPassword,
                 birthAt: birthAt ? new Date(birthAt) : null, // 👈 conversão segura
                 createdAt: new Date(),
                 updatedAt: new Date(),
@@ -45,9 +49,12 @@ export class UserService {
     async update(id: number, {email, name, password, birthAt, role}: UpdatePutUserDTO) {
         
         await this.exists(id);
+
+        // 🧩 Gerar hash seguro da senha
+        const hashedPassword = await bcrypt.hash(password, 10);
         
         return this.prisma.user.update ({
-            data:{email, name, password, birthAt: birthAt ? new Date(birthAt) : null, role},
+            data:{email, name, password:hashedPassword, birthAt: birthAt ? new Date(birthAt) : null, role},
             where: {
                 id
             }
@@ -69,7 +76,8 @@ export class UserService {
         }
 
         if (password) {
-            data.password =password;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            data.password = hashedPassword;
         }
         
         if (birthAt) {
