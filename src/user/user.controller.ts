@@ -9,9 +9,10 @@ import { Role } from "src/enums/role.enums";
 import { Roles } from "src/decorators/roles.decorator";
 import { RoleGuard } from "src/guards/role.guard";
 import { AuthGuard } from "src/guards/auth.guard";
+import { ThrottlerGuard } from "@nestjs/throttler";
 
 @Roles(Role.Admin)
-@UseGuards(AuthGuard, RoleGuard)
+@UseGuards(ThrottlerGuard, AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor) // para controlar todas as rotas da classe UserController @Post, @Get, @Put, @Patch, @Delete 
 @Controller('users')
 export class UserController {
@@ -20,6 +21,7 @@ export class UserController {
 
     //@UseInterceptors(LogInterceptor) quando está dentro do construtor fica individual para cada rota.
     
+    @UseGuards(ThrottlerGuard)
     @Post()
     async create(@Body() data: CreateUserDTO){
         return this.userSevice.create(data);        
