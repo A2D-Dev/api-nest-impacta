@@ -15,7 +15,6 @@ Projeto acadêmico da Impacta — autoria **A2D-Dev** (Anderson Dantas).
 ![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
 ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white)
-![GitHub commits difference between two branches/tags/commits](https://img.shields.io/github/commits-difference/:user/:repo)
 
 ## 📂 Estrutura de Pastas (sugerida)
 
