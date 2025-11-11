@@ -1,5 +1,4 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
-import { request } from "http";
 import { Observable, tap } from "rxjs";
 
 export class LogInterceptor implements NestInterceptor {

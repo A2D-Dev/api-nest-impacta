@@ -5,6 +5,7 @@ import { PrismaService } from "src/prisma/prisma.service";
 import { AuthRegisterDTO } from "./dto/auth-register-dto";
 import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
+import { MailerService } from "@nestjs-modules/mailer/dist";
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
         private readonly prisma: PrismaService,
-        private readonly userService: UserService
+        private readonly userService: UserService,
+        private readonly mailer: MailerService
     ) {}
 
     
@@ -92,7 +94,23 @@ export class AuthService {
             throw new UnauthorizedException('E-mail está incorreto.');
         }
 
-        //TO DO: Enviar o e-mail.....
+        const token = this.jwtService.sign({
+            id: user.id
+        }, {
+            expiresIn: "30m",
+            subject: String(user.id),
+            issuer: 'forget',
+            audience: 'users'
+        });
+        await this.mailer.sendMail({
+            subject: 'Recuperação de Senha',
+            to: 'adias@api.anderson.com.br',
+            template: 'forget',
+            context:{
+                name: user.name,
+                token
+            }
+        });
 
         return true;
 
@@ -100,20 +118,33 @@ export class AuthService {
 
     async reset(password:string, token:string) {
 
-        //TO DO: Validar o token...
+        try {
+            const data:any =  this.jwtService.verify(token,{
+                issuer: 'forget',
+                audience: 'users'
+            }); 
 
-        const id = 0;
+            if (isNaN(Number(data.id))) {
+                throw new BadRequestException ("Token é inválido!!!");
+            }
 
-        const user = await this.prisma.user.update({
-            where: {
-                id,
-            },
-            data: {
-                password,
-            },
-        });
+            const hashedPassword = await bcrypt.hash(password, 10);
+            password = hashedPassword;
 
-        return this.createToken(user);
+            const user = await this.prisma.user.update({
+                where: {
+                    id: Number(data.id),
+                },
+                data: {
+                    password,
+                },
+            });
+
+            return this.createToken(user);
+            
+        } catch (e) {
+            throw new BadRequestException (e);
+        }     
 
     }
 
